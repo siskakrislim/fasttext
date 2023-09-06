@@ -1,0 +1,47 @@
+from gensim.models import Word2Vec
+from sklearn.cluster import DBSCAN
+from sklearn.preprocessing import normalize
+
+# Load the pre-trained Word2Vec model
+model = Word2Vec.load('path/to/word2vec/model')
+
+# Vectorize the strings
+vectors = []
+for string in strings:
+    vector = []
+    for word in string.split():
+        if word in model.wv.vocab:
+            vector.append(model.wv[word])
+    if vector:
+        vectors.append(sum(vector) / len(vector))
+
+# Normalize the vectors
+vectors = normalize(vectors)
+
+# Cluster the data
+dbscan = DBSCAN(metric='cosine', eps=0.5, min_samples=5)
+clusters = dbscan.fit_predict(vectors)
+
+from gensim.models import Word2Vec
+from scipy.cluster.hierarchy import fcluster, linkage
+from sklearn.preprocessing import normalize
+
+# Load the pre-trained Word2Vec model
+model = Word2Vec.load('path/to/word2vec/model')
+
+# Vectorize the strings
+vectors = []
+for string in strings:
+    vector = []
+    for word in string.split():
+        if word in model.wv.vocab:
+            vector.append(model.wv[word])
+    if vector:
+        vectors.append(sum(vector) / len(vector))
+
+# Normalize the vectors
+vectors = normalize(vectors)
+
+# Cluster the data
+Z = linkage(vectors, method='ward', metric='euclidean')
+clusters = fcluster(Z, t=5, criterion='maxclust')
